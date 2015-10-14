@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='djangorestframework-expander',
-    version='0.1.1',
+    version='0.1.2',
     description=('A serializer mixin for Django REST Framework to expand object representations inline'),
     author='Ryan Pineo',
     author_email='ryanpineo@gmail.com',
