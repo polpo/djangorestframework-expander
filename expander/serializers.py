@@ -9,7 +9,9 @@ class ExpanderSerializerMixin(object):
             return
 
         if not expanded_fields:
-            request = self.context.get('request', None)
+            context = getattr(self, 'context', {})
+
+            request = context.get('request', None)
             if not request:
                 return
 
