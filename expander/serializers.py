@@ -40,6 +40,8 @@ class ExpanderSerializerMixin(object):
                     kwargs = {}
                     serializer_class = serializer_class_info
 
+                kwargs.setdefault('context', self.context)
+
                 # If the serializer class isn't an expander then it can't handle the expanded_fields kwarg.
                 if issubclass(serializer_class, ExpanderSerializerMixin):
                     serializer = serializer_class(*args, expanded_fields=next_level_expanded_field, **kwargs)

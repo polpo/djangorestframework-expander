@@ -43,6 +43,11 @@ class MenuItemOptionChoiceSerializer(serializers.ModelSerializer):
         model = MenuItemOptionChoice
         fields = ('id', 'title')
 
+    def to_representation(self, obj):
+        # test: make sure the context is passed through
+        assert self.context['request']
+        return super(MenuItemOptionChoiceSerializer, self).to_representation(obj)
+
 
 class MenuItemOptionSerializer(ExpanderSerializerMixin, serializers.ModelSerializer):
     class Meta:
