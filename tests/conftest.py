@@ -4,13 +4,15 @@ def pytest_configure():
     settings.configure(
         ROOT_URLCONF='tests.project.urls',
         SECRET_KEY='not so secret',
-        DATABASES = {
+        DATABASES={
             'default': {
                 'ENGINE': 'django.db.backends.sqlite3',
                 'NAME': 'db.sqlite',
             }
         },
         INSTALLED_APPS=[
+            'django.contrib.auth',
+            'django.contrib.contenttypes',
             'rest_framework',
             'tests.project'
         ],
