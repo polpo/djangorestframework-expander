@@ -1,4 +1,5 @@
 language: python
+
 python:
   - '3.5'
 
@@ -47,6 +48,8 @@ env:
   - TOX_ENV=py35-django1.9-drf3.3
 
 install:
+  # Virtualenv < 14 is required to keep the Python 3.2 builds running.
+  - pip install tox "virtualenv<14"
   - pip install tox
 
 script:
