@@ -2,7 +2,7 @@ from decimal import Decimal
 
 import factory
 
-from .project.models import Restaurant, Menu, PriceBracket, MenuItem, \
+from .project.models import Restaurant, Chef, Menu, PriceBracket, MenuItem, \
     MenuItemOption, MenuItemOptionChoice
 
 
@@ -13,8 +13,17 @@ class RestaurantFactory(factory.DjangoModelFactory):
         model = Restaurant
 
 
+class ChefFactory(factory.DjangoModelFactory):
+    name = "DeGarnier"
+    stars = 4
+
+    class Meta:
+        model = Chef
+
+
 class MenuFactory(factory.DjangoModelFactory):
     restaurant = factory.SubFactory(RestaurantFactory)
+    chef = factory.SubFactory(ChefFactory)
     title = 'Breakfast'
 
     class Meta:

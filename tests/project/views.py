@@ -3,7 +3,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from expander import ExpanderSerializerMixin
 
-from .models import Restaurant, Menu, PriceBracket, MenuItem, \
+from .models import Restaurant, Chef, Menu, PriceBracket, MenuItem, \
     MenuItemOption, MenuItemOptionChoice
 
 
@@ -13,12 +13,19 @@ class RestaurantSerializer(ExpanderSerializerMixin, serializers.ModelSerializer)
         fields = ('id', 'title')
 
 
+class ChefSerializer(ExpanderSerializerMixin, serializers.ModelSerializer):
+    class Meta:
+        model = Chef
+        fields = ('id', 'name', 'stars')
+
+
 class MenuSerializer(ExpanderSerializerMixin, serializers.ModelSerializer):
     class Meta:
         model = Menu
         fields = ('id', 'restaurant', 'title')
         expandable_fields = {
             'restaurant': RestaurantSerializer,
+            'chef': ChefSerializer,
         }
 
 

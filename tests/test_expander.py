@@ -3,6 +3,8 @@ from rest_framework import status
 import pytest
 
 import tests.factories as f
+from expander.parse_qs import qs_from_dict
+from expander.parse_qs import dict_from_qs
 
 
 pytestmark = pytest.mark.django_db
@@ -68,3 +70,49 @@ def test_can_expand_lists(client):
         {'id': choice2.pk, 'title': choice2.title},
 
     ]
+
+
+def test_it_should_be_able_to_expand_multiple_nested_fields(client):
+    menu_item = f.MenuItemFactory()
+    r = client.get('/menu-items/%s/?expand=menu.restaurant,menu.chef' % (
+        menu_item.pk,))
+    assert r.data['menu'] == {
+        'id': menu_item.menu.pk,
+        'restaurant': {
+            'id': menu_item.menu.restaurant.pk,
+            'title': menu_item.menu.restaurant.title,
+        },
+        'chef': {
+            'id': menu_item.menu.chef.pk,
+            'name': menu_item.menu.chef.name,
+            'stars': menu_item.menu.chef.stars,
+        },
+        'title': menu_item.menu.title
+    }
+
+
+def test_can_parse_expand_querystring(client):
+    assert {"latestPeriod": {}} == dict_from_qs("latestPeriod")
+    assert {"latestPeriod": {"fhr": {}}} == dict_from_qs("latestPeriod.fhr")
+    assert {"latestPeriod": {"fhr": {}, "di": {}}} == (
+        dict_from_qs("latestPeriod.fhr,latestPeriod.di"))
+
+    expected = {"latestPeriod": {
+                "fhr": {}, "di": {}, "creditModel": {
+                    "creditModel": {}}}}
+    actual = dict_from_qs(
+                    "latestPeriod.fhr,latestPeriod.di,"
+                    "latestPeriod.creditModel.creditModel")
+    assert expected == actual
+
+
+def test_can_reverse_parse_dict_to_querystring(client):
+    assert "fhr" == qs_from_dict({"fhr": {}})
+    assert "di,fhr" == qs_from_dict({"fhr": {}, "di": {}})
+
+    assert "di,fhr.inner1" == qs_from_dict({"fhr": {"inner1": {}}, "di": {}})
+
+    assert ("di,fhr.inner1.inner2,fhr.inner1.inner3" ==
+            qs_from_dict({"fhr": {"inner1": {
+                         "inner2": {}, "inner3": {}}},
+                         "di": {}}))

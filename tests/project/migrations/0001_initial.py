@@ -67,4 +67,17 @@ class Migration(migrations.Migration):
             name='restaurant',
             field=models.ForeignKey(related_name='menus', to='project.Restaurant'),
         ),
+        migrations.CreateModel(
+            name='Chef',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=128)),
+                ('stars', models.IntegerField()),
+            ],
+        ),
+        migrations.AddField(
+            model_name='menu',
+            name='chef',
+            field=models.ForeignKey(related_name='menus', to='project.Chef'),
+        ),
     ]
