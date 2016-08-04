@@ -5,8 +5,14 @@ class Restaurant(models.Model):
     title = models.CharField(max_length=128)
 
 
+class Chef(models.Model):
+    name = models.CharField(max_length=128)
+    stars = models.IntegerField()
+
+
 class Menu(models.Model):
     restaurant = models.ForeignKey('Restaurant', related_name='menus')
+    chef = models.ForeignKey('Chef', related_name='menus')
     title = models.CharField(max_length=128)
 
 

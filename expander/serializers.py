@@ -1,3 +1,8 @@
+
+from .parse_qs import dict_from_qs
+from .parse_qs import qs_from_dict
+
+
 class ExpanderSerializerMixin(object):
     def __init__(self, *args, **kwargs):
         expanded_fields = kwargs.pop('expanded_fields', None)
@@ -21,11 +26,9 @@ class ExpanderSerializerMixin(object):
             if not expanded_fields:
                 return
 
-        for expanded_field in expanded_fields.split(','):
+        expansions = dict_from_qs(expanded_fields)
+        for expanded_field, nested_expand in expansions.items():
             next_level_expanded_field = ''
-
-            if '.' in expanded_field:
-                expanded_field, next_level_expanded_field = expanded_field.split('.', 1)
 
             if expanded_field in expandable_fields:
                 serializer_class_info = expandable_fields[expanded_field]
@@ -42,9 +45,12 @@ class ExpanderSerializerMixin(object):
 
                 kwargs.setdefault('context', self.context)
 
-                # If the serializer class isn't an expander then it can't handle the expanded_fields kwarg.
+                # If the serializer class isn't an expander then it can't
+                # handle the expanded_fields kwarg.
                 if issubclass(serializer_class, ExpanderSerializerMixin):
-                    serializer = serializer_class(*args, expanded_fields=next_level_expanded_field, **kwargs)
+                    serializer = serializer_class(
+                        *args, expanded_fields=qs_from_dict(nested_expand),
+                        **kwargs)
                 else:
                     serializer = serializer_class(*args, **kwargs)
 
