@@ -3,6 +3,7 @@ from rest_framework import status
 import pytest
 
 import tests.factories as f
+import tests.project.views as test_views
 from expander.parse_qs import qs_from_dict
 from expander.parse_qs import dict_from_qs
 
@@ -89,6 +90,20 @@ def test_it_should_be_able_to_expand_multiple_nested_fields(client):
         },
         'title': menu_item.menu.title
     }
+
+
+def test_kwargs_reused_across_requests(client):
+    meta = test_views.MenuItemSerializer.Meta
+    price_bracket_spec = meta.expandable_fields['price_bracket']
+
+    assert (test_views.PriceBracketSerializer, (), {}) == price_bracket_spec
+
+    menu_item = f.MenuItemFactory()
+    r = client.get('/menu-items/%s/?expand=menu.restaurant,menu.chef' % (
+        menu_item.pk,))
+
+    # Spec has not been altered
+    assert (test_views.PriceBracketSerializer, (), {}) == price_bracket_spec
 
 
 def test_can_parse_expand_querystring(client):

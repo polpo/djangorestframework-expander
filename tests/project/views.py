@@ -41,7 +41,7 @@ class MenuItemSerializer(ExpanderSerializerMixin, serializers.ModelSerializer):
         fields = ('id', 'menu', 'title', 'description', 'price')
         expandable_fields = {
             'menu': MenuSerializer,
-            'price_bracket': PriceBracketSerializer,
+            'price_bracket': (PriceBracketSerializer, (), {}),
         }
 
 
