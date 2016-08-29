@@ -43,6 +43,7 @@ class ExpanderSerializerMixin(object):
                     kwargs = {}
                     serializer_class = serializer_class_info
 
+                kwargs = kwargs.copy()
                 kwargs.setdefault('context', self.context)
 
                 # If the serializer class isn't an expander then it can't
