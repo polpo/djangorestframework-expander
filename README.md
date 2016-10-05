@@ -30,6 +30,12 @@ pip install djangorestframework-expander
 * Expand multiple fields with a comma.  e.g. `/menu-items/?expand=menu,price_bracket`
 * Expand nested fields by using a dot.  e.g. `/menu-items/?expand=menu.restaurant`
 
+# Configuration
+
+The available configuration options using settings.py and their defaults.
+
+- `DRF_EXPANDER_EXPAND_ARG = 'expand'` - The request query param that will be used to indicate which fields to expand.
+
 # Example
 
 ```python
