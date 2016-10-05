@@ -1,4 +1,5 @@
 
+from django.conf import settings
 from .parse_qs import dict_from_qs
 from .parse_qs import qs_from_dict
 
@@ -7,6 +8,7 @@ class ExpanderSerializerMixin(object):
     def __init__(self, *args, **kwargs):
         expanded_fields = kwargs.pop('expanded_fields', None)
         expandable_fields = getattr(self.Meta, 'expandable_fields', None)
+        expand_arg = getattr(settings, 'DRF_EXPANDER_EXPAND_ARG', 'expand')
 
         super(ExpanderSerializerMixin, self).__init__(*args, **kwargs)
 
@@ -22,7 +24,7 @@ class ExpanderSerializerMixin(object):
             if not request:
                 return
 
-            expanded_fields = request.query_params.get('expand', None)
+            expanded_fields = request.query_params.get(expand_arg, None)
             if not expanded_fields:
                 return
 
