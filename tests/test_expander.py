@@ -91,7 +91,6 @@ def test_it_should_be_able_to_expand_multiple_nested_fields(client):
         'title': menu_item.menu.title
     }
 
-
 def test_kwargs_reused_across_requests(client):
     meta = test_views.MenuItemSerializer.Meta
     price_bracket_spec = meta.expandable_fields['price_bracket']
@@ -111,6 +110,7 @@ def test_can_parse_expand_querystring(client):
     assert {"latestPeriod": {"fhr": {}}} == dict_from_qs("latestPeriod.fhr")
     assert {"latestPeriod": {"fhr": {}, "di": {}}} == (
         dict_from_qs("latestPeriod.fhr,latestPeriod.di"))
+    assert {"latestPeriod": {"fhr": {"asd": {}}}} == dict_from_qs("latestPeriod,latestPeriod.fhr.asd")
 
     expected = {"latestPeriod": {
                 "fhr": {}, "di": {}, "creditModel": {
