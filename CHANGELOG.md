@@ -1,5 +1,9 @@
 # Change Log
 
+## [v0.2.3](https://github.com/silverlogic/djangorestframework-expander/tree/v0.2.2) (2016-10-05)
+
+- Fix bug when intermediate expansion is missing. e.g. ?expand=section,section.first.second
+
 ## [v0.2.2](https://github.com/silverlogic/djangorestframework-expander/tree/v0.2.2) (2016-10-05)
 
 - Allowed the expand request query param to be configurable.
