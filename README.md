@@ -6,7 +6,7 @@ A serializer mixin for Django REST Framework to expand object representations in
 
 # Requirements
 
-* Python (2.7, 3.2, 3.3, 3.4, 3.5)
+* Python (2.7, 3.2, 3.3, 3.4, 3.5, 3.6)
 * Django (1.7, 1.8, 1.9)
 * Django REST Framework (3.1, 3.2, 3.3)
 

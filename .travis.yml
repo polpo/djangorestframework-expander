@@ -47,6 +47,13 @@ env:
   - TOX_ENV=py35-django1.9-drf3.2
   - TOX_ENV=py35-django1.9-drf3.3
 
+  - TOX_ENV=py36-django1.8-drf3.1
+  - TOX_ENV=py36-django1.8-drf3.2
+  - TOX_ENV=py36-django1.8-drf3.3
+  - TOX_ENV=py36-django1.9-drf3.1
+  - TOX_ENV=py36-django1.9-drf3.2
+  - TOX_ENV=py36-django1.9-drf3.3
+
 install:
   # Virtualenv < 14 is required to keep the Python 3.2 builds running.
   - pip install tox "virtualenv<14"
