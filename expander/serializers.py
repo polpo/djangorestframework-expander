@@ -15,7 +15,7 @@ class ExpanderSerializerMixin(object):
         if not expandable_fields:
             return
 
-        if not expanded_fields:
+        if expanded_fields is None:
             context = self.context
             if not context:
                 return

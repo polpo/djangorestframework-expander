@@ -12,6 +12,17 @@ class RestaurantSerializer(ExpanderSerializerMixin, serializers.ModelSerializer)
         model = Restaurant
         fields = ('id', 'title')
 
+    # Overriding init to avoid circular dependency (MenuSerializer not defined yet)
+    # This could also be implemented by making expandable_fields lazily evaluated,
+    # using a get_expandable_fields() function, etc.
+    def __init__(self, *args, **kwargs):
+        expandable_fields = getattr(self.Meta, 'expandable_fields', {})
+        expandable_fields.update({
+            'menus': (MenuSerializer, (), {'many': True}),
+        })
+        setattr(self.Meta, 'expandable_fields', expandable_fields)
+        super(RestaurantSerializer, self).__init__(*args, **kwargs)
+
 
 class ChefSerializer(ExpanderSerializerMixin, serializers.ModelSerializer):
     class Meta:
@@ -26,6 +37,15 @@ class MenuSerializer(ExpanderSerializerMixin, serializers.ModelSerializer):
         expandable_fields = {
             'restaurant': RestaurantSerializer,
             'chef': ChefSerializer,
+        }
+
+
+class ChefMenuSerializer(ExpanderSerializerMixin, serializers.ModelSerializer):
+    class Meta:
+        model = Chef
+        fields = ('id', 'name', 'stars')
+        expandable_fields = {
+            'menus': (MenuSerializer, (), {'many': True})
         }
 
 
@@ -64,6 +84,11 @@ class MenuItemOptionSerializer(ExpanderSerializerMixin, serializers.ModelSeriali
             'menu_item': MenuItemSerializer,
             'choices': (MenuItemOptionChoiceSerializer, (), {'many': True}),
         }
+
+
+class ChefViewSet(ModelViewSet):
+    queryset = Chef.objects.all()
+    serializer_class = ChefMenuSerializer
 
 
 class MenuItemViewSet(ModelViewSet):

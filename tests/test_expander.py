@@ -131,3 +131,18 @@ def test_can_reverse_parse_dict_to_querystring(client):
             qs_from_dict({"fhr": {"inner1": {
                          "inner2": {}, "inner3": {}}},
                          "di": {}}))
+
+
+def test_recursive_fields(client):
+    menu = f.MenuFactory()
+    chef = menu.chef
+    r = client.get('/chef/%s/?expand=menus.restaurant.menu' % (
+        chef.pk,))
+    assert r.data['menus'][0] == {
+        'id': chef.menus.first().id,
+        'restaurant': {
+            'id': chef.menus.first().restaurant.pk,
+            'title': chef.menus.first().restaurant.title,
+        },
+        'title': chef.menus.first().title
+    }
